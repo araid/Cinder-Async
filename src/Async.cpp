@@ -32,7 +32,7 @@ void Async::checkFutures()
     while (fc != std::end(futureCallbacks)) {
         if (futureReady(fc->first)) {
             if (fc->second) fc->second();   // callback on main thread - should it be called with dispatchAsync?
-            futureCallbacks.erase(fc);      // remove element from vector
+            fc = futureCallbacks.erase(fc);      // remove element from vector
         }
         else {
             ++fc;
