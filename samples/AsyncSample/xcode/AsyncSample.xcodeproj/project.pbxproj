@@ -133,8 +133,8 @@
 		20BFBD601B45EC4700DFF138 /* src */ = {
 			isa = PBXGroup;
 			children = (
-				20BFBD611B45EC4700DFF138 /* Async.cpp */,
 				20BFBD621B45EC4700DFF138 /* Async.h */,
+				20BFBD611B45EC4700DFF138 /* Async.cpp */,
 				20BFBD631B45EC4700DFF138 /* Async.mm */,
 			);
 			name = src;

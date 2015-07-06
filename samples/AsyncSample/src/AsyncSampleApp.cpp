@@ -24,7 +24,7 @@ void AsyncSampleApp::mouseDown( MouseEvent event )
 {
     auto bgCall = [&](){
         console() << "Called async function in thread: " << std::this_thread::get_id() << std::endl;
-        std::this_thread::sleep_for(std::chrono::seconds(3));
+        std::this_thread::sleep_for(std::chrono::seconds(2));
     };
     
     auto callback = [&](){
@@ -37,7 +37,7 @@ void AsyncSampleApp::mouseDown( MouseEvent event )
 void AsyncSampleApp::draw()
 {
     // random animation to show the app doesn't freeze
-    gl::clear( Color( 0, 0, 0 ) );
+    gl::clear(Color(0, 0, 0));
     gl::color(1, 1, 0);
     gl::drawSolidCircle(getWindowCenter() + vec2(sin(getElapsedSeconds()), cos(getElapsedSeconds())) * 50.0f, 10);
 }

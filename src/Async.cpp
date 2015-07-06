@@ -11,40 +11,21 @@
 
 #ifdef USE_STD
 
-bool Async::bInitialized = false;
-std::vector<Async::FutureCallback> Async::futureCallbacks;
+int Async::idCount = 0;
+std::map<int, std::shared_future<void>> Async::futures;
 
 void Async::call(std::function<void()> func, std::function<void()> callback)
 {
-    if (!bInitialized) {
-        bInitialized = true;
-        ci::app::App::get()->getSignalUpdate().connect([](){ Async::checkFutures(); });
-    }
+    int futureId = idCount++;
     
-    std::shared_future<void> future = std::async(std::launch::async, func);
-    futureCallbacks.push_back(FutureCallback(future, callback));
+    futures[futureId] = std::async(std::launch::async, [func, callback, futureId] {
+        func();
+        
+        ci::app::App::get()->dispatchAsync([callback, futureId] {  // called on main thread
+            callback();
+            futures.erase(futureId);
+        });
+    });
 }
-
-void Async::checkFutures()
-{
-    auto fc = std::begin(futureCallbacks);
-    
-    while (fc != std::end(futureCallbacks)) {
-        if (futureReady(fc->first)) {
-            if (fc->second) fc->second();   // callback on main thread - should it be called with dispatchAsync?
-            futureCallbacks.erase(fc);      // remove element from vector
-        }
-        else {
-            ++fc;
-        }
-    }
-}
-
-bool Async::futureReady(std::shared_future<void> future)
-{
-    return future.wait_for(std::chrono::seconds(0)) == std::future_status::ready;
-}
-
-
 
 #endif

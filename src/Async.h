@@ -24,10 +24,7 @@ public:
 private:
     
 #ifdef USE_STD
-    typedef std::pair<std::shared_future<void>, std::function<void()>> FutureCallback;
-    static std::vector<FutureCallback> futureCallbacks;
-    static bool futureReady(std::shared_future<void> future);
-    static void checkFutures();
-    static bool bInitialized;
+    static int idCount;
+    static std::map<int, std::shared_future<void>> futures;
 #endif
 };
